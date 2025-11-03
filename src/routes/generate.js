@@ -1,37 +1,61 @@
 import express from "express";
-import Document from "../models/Document.js";
-import { generateMockSummary } from "../utils/mockSummary.js";
-
 const router = express.Router();
 
-// POST: /api/generate
-router.post("/", async (req, res) => {
-  try {
-    const { title, content, query } = req.body;
-    if (!title || !content) {
-      return res
-        .status(400)
-        .json({ error: "Title and content are required !" });
-    }
+// Hardcoded legal documents
+const mockDocs = [
+  {
+    _id: "1",
+    title: "Freedom of Speech",
+    content:
+      "Every citizen has the right to freedom of speech without interference from the government.",
+  },
+  {
+    _id: "2",
+    title: "Contract Law",
+    content:
+      "A contract must have offer, acceptance, consideration, and mutual consent to be legally binding.",
+  },
+  {
+    _id: "3",
+    title: "Employment Law",
+    content:
+      "Employees have the right to a safe workplace and fair treatment under employment regulations.",
+  },
+];
 
-    const summary = generateMockSummary(content, query || "");
-    const newDoc = await Document.create({ title, content });
-    res.status(201).json({ document: newDoc, summary });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
-  }
-});
+// POST /api/generate
+router.post("/", (req, res) => {
+  const { query } = req.body;
 
-// GET: /api/documents
-router.get("/", async (req, res) => {
-  try {
-    const documents = await Document.find().sort({ createdAt: -1 });
-    res.json(documents);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
+  if (!query || query.trim() === "") {
+    return res.json([
+      { title: "No query provided", summary: "Please enter a search term." },
+    ]);
   }
+
+  // Filter documents based on query
+  const results = mockDocs
+    .filter(
+      (doc) =>
+        doc.title.toLowerCase().includes(query.toLowerCase()) ||
+        doc.content.toLowerCase().includes(query.toLowerCase())
+    )
+    .map((doc) => ({
+      _id: doc._id,
+      title: doc.title,
+      summary:
+        doc.content.length > 100
+          ? doc.content.slice(0, 100) + "..."
+          : doc.content,
+    }));
+
+  if (results.length === 0) {
+    return res.json([
+      { title: "No results found", summary: "Try another search query." },
+    ]);
+  }
+
+  res.json(results);
 });
 
 export default router;
