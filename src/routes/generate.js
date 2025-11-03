@@ -23,37 +23,27 @@ const mockDocs = [
   },
 ];
 
-// POST /api/generate
-router.post("/", (req, res) => {
-  const { query } = req.body;
+router.get("/", (req, res) => {
+  const query = req.query.query?.toLowerCase();
+  if (!query) return res.status(400).json({ error: "Query is required." });
 
-  if (!query || query.trim() === "") {
-    return res.json([
-      { title: "No query provided", summary: "Please enter a search term." },
-    ]);
-  }
-
-  // Filter documents based on query
   const results = mockDocs
     .filter(
-      (doc) =>
-        doc.title.toLowerCase().includes(query.toLowerCase()) ||
-        doc.content.toLowerCase().includes(query.toLowerCase())
+      (d) =>
+        d.title.toLowerCase().includes(query) ||
+        d.content.toLowerCase().includes(query)
     )
-    .map((doc) => ({
-      _id: doc._id,
-      title: doc.title,
-      summary:
-        doc.content.length > 100
-          ? doc.content.slice(0, 100) + "..."
-          : doc.content,
+    .map((d) => ({
+      document: d,
+      summary: `Summary: ${d.content.slice(0, 100)}${
+        d.content.length > 100 ? "..." : ""
+      }`,
     }));
 
-  if (results.length === 0) {
-    return res.json([
-      { title: "No results found", summary: "Try another search query." },
-    ]);
-  }
+  if (results.length === 0)
+    return res
+      .status(404)
+      .json({ error: "No matching legal documents found." });
 
   res.json(results);
 });

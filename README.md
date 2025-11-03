@@ -2,28 +2,25 @@
 
 ## **Project Overview**
 
-This backend shows a Legal Document Search API. It is **fully mock-based** with pre-defined legal documents. It provides endpoints for searching and summarizing legal documents without connecting to a database.
+This is the backend service for the **Legal Document Search Portal**.  
+It provides APIs to search and retrieve mock legal documents with summaries.
 
 ---
 
-## **Tech Stack**
+## **Features**
+
+- Mock legal document search
+- CORS & JSON middleware
+- Dockerized for easy deployment
+
+---
+
+## Tech Stack
 
 - Node.js
 - Express.js
-- CORS
-
----
-
-## **Project Structure**
-
-```
-backend/
-├── index.js
-├── routes/
-│   └── generate.js
-├── package.json
-└── package-lock.json
-```
+- Docker
+- dotenv
 
 ---
 
@@ -39,16 +36,42 @@ cd Legal-Document-Search-Portal/backend
 ### 2️⃣ Install dependencies
 
 ```bash
-npm install express cors
+npm install
 ```
 
-### 3️⃣ Start the server
+### 3️⃣ Run Locally
 
 ```bash
 npm run dev
 ```
 
-### 4️⃣ Default Server Port
+Then open your browser and test:
+
+```bash
+http://localhost:4000/api/generate?query=law
+```
+
+### 4️⃣ 🐳 Run with Docker
+
+### 1️⃣ Build Docker Image
+
+```bash
+docker build -t legal-backend .
+```
+
+### 2️⃣ Run the Container
+
+```bash
+docker run -p 4000:4000 legal-backend
+```
+
+### 3️⃣ Verify API
+
+```bash
+http://localhost:4000/api/generate?query=law
+```
+
+### Default Server Port
 
 ```
 http://localhost:4000
