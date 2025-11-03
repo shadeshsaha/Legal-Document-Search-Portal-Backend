@@ -42,27 +42,13 @@ cd Legal-Document-Search-Portal/backend
 npm install express cors
 ```
 
-### 3️⃣ Optional: Install nodemon for development
+### 3️⃣ Start the server
 
 ```bash
-npm install -g nodemon
+npm run dev
 ```
 
-### 4️⃣ Start the server
-
-- Production:
-
-```bash
-node index.js
-```
-
-- Development (auto-restart):
-
-```bash
-nodemon index.js
-```
-
-### 5️⃣ Default Server Port
+### 4️⃣ Default Server Port
 
 ```
 http://localhost:4000
