@@ -1,13 +1,16 @@
 import cors from "cors";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import express from "express";
 import generateRoutes from "./src/routes/generate.js";
 
-dotenv.config();
+// dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Test: Check if environment variables are loaded natively
+console.log("Loaded PORT from .env:", process.env.PORT);
 
 // Routes
 app.use("/api/generate", generateRoutes);
